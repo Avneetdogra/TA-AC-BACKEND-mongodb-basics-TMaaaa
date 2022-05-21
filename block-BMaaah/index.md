@@ -2,22 +2,23 @@ writeCode
 
 Write code to execute below expressions.
 
-1. Create a database named `blog`.
-2. Create a collection called 'articles'.
-3. Insert multiple documents(at least 3) into articles. It should have fields
+Create a database named blog.
+use db blog
 
-- title as string
-- createdAt as date
-- details as String
-- author as nested object
-  - author should have
-    - name
-    - email
-    - age
-    - example author: {name: 'abc', email: 'abc@gmail', age: 25}
-- tags : Array of strings like ['html', 'css']
+Create a collection called 'articles'.
+db.createCollection("articles");
 
-```js
+Insert multiple documents(at least 3) into articles. It should have fields
+title as string
+createdAt as date
+details as String
+author as nested object
+author should have
+name
+email
+age
+example author: {name: 'abc', email: 'abc@gmail', age: 25}
+tags : Array of strings like ['html', 'css']
 // An article should look like in the database
 {
   _id: 'some_random_id',
@@ -30,30 +31,51 @@ Write code to execute below expressions.
   },
   tags: ['js', 'mongo']
 }
-```
+db.articles.insertMany([ {_id:"977", title: "A Modern Introduction to Programming", author:{ name:"Marijn Haverbeke", email:"Marijn@gmail.com", age:43 } tags:["JavaScript","Java"] }, {_id:"978", title:"Learning JavaScript Design Patterns", details:"A JavaScript and jQuery Developer's Guide", author:{ name:"Addy Osmani", email:"Addy@gmail.com", age:47 } tags:["Jquery","JavaScript"] }, {_id:"979", title: "Speaking JavaScript", details: "An In-Depth Guide for Programmers", author:{ name:"Marijn Haverbeke", email:"Marijn@gmail.com", age:43 } tags:["python","Java"] } ])
 
-4. Find all the articles using `db.COLLECTION_NAME.find()`
-5. Find a document using \_id field.
-6. 1. Find documents using title
-7. 2. Find documents using author's name field.
-8. Find document using a specific tag.
+Find all the articles using db.COLLECTION_NAME.find()
+db.articles.find().pretty();
 
-9. Update title of a document using its \_id field.
-10. Update a author's name using article's title.
-11. rename details field to description from all articles in articles collection.
-12. Add additional tag in a specific document.
+Find a document using _id field.
+db.articles.find({_id:"979"});
 
-13. Update an article's title using $set and without $set.
+Find documents using title
+db.articles.find({title:"Speaking JavaScript"});
 
-- Write the differences here ?
+Find documents using author's name field.
+db.articles.find()
 
-13. find an article using title and increment it's auhtor's age by 5.
+Find document using a specific tag.
+db.articles.find({tags:"JavaScript"});
 
-14. Delete a document using \_id field with `db.COLLECTION_NAME.remove()`.
+Update title of a document using its _id field.
+db.articles.update({_id:979},{$set:{title:"Eloquent JavaScript"}});
+
+Update a author's name using article's title.
+db.articles.update({title:"Eloquent JavaScript"},{$set;{author.name:"Marjin Heverbik"}});
+
+rename details field to description from all articles in articles collection.
+TODO:
+
+Add additional tag in a specific document.
+db.articles.update({_id:987},{$push:{tags:"node.js"}});
+
+Update an article's title using $set and without $set.
+db.articles.update({_id:979},{$set:{title:"JavaScript"}});
+
+db.articles.update({_id:979},{title:"JavaScript"});
+
+Write the differences here ?
+with signitwilladanduptatethevalueofthedocumentandincaseofwithout it will delete the value previous and add only new value.
+
+find an article using title and increment it's auhtor's age by 5.
+TODO: db.articles.update({title:"JavaScript"},{$set:{$add:[]}})
+
+Delete a document using _id field with db.COLLECTION_NAME.remove().
+db.articles.remove({_id:979});
 
 // Sample data
 
-```js
 db.users.insertMany([
   {
     age: 49,
@@ -163,11 +185,19 @@ db.users.insertMany([
     sports: ["football", "cricket", "TT"],
   },
 ]);
-```
-
 Insert above data into database to perform below queries:-
 
-- Find all males who play cricket.
-- Update user with extra golf field in sports array whose name is "Steve Ortega".
-- Find all users who play either 'football' or 'cricket'.
-- Find all users whose name includes 'ri' in their name.
+Find all males who play cricket.
+db.users.find(sports:"cricket");
+
+Update user with extra golf field in sports array whose name is "Steve Ortega".
+db.users.update({name:"Steve Ortega"},{$set:{$push:{sports:"golf"}}});
+
+Find all users who play either 'football' or 'cricket'.
+db.users.find({$and:{sports:"football"},{sports:"cricket"}});
+
+db.users.find({sports:{$in:["football","circket"]}});
+
+Find all users whose name includes 'ri' in their name.
+db.users.find($contains:{name:"ri"});
+
